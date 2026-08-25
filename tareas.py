@@ -1,43 +1,47 @@
-import json  # <-- CAMBIO: importar json, no jsonschema
+import json  # ❌ Tú pusiste "jsonschema" (esa librería no existe). Es "json" a secas.
 
-ARCHIVO = "tareas.json"  # <-- Usamos mayúsculas para constantes (buena práctica)
+ARCHIVO = "tareas.json"  # Usé mayúsculas para constante, pero es solo nombre
 
 def cargar_tareas():
     try:
-        with open(ARCHIVO, "r") as archivo:  # <-- CORREGIDO: open una vez, cierre de comillas
-            return json.load(archivo)         # <-- indentado correctamente
+        # ❌ Tú pusiste: "with open open(archivo, "r) as archivo:"
+        # ✅ Debía ser: with open(archivo, "r") as archivo:  (sin "open" repetido y cerrar comillas)
+        with open(ARCHIVO, "r") as archivo:
+            return json.load(archivo)
     except FileNotFoundError:
-        return []  # Si no existe el archivo, devolvemos lista vacía
+        return []  # Si no existe, devuelve lista vacía
 
-def guardar_tareas(tareas):  # <-- parámetro se llama tareas (no lista_tareas)
+def guardar_tareas(tareas):
+    # ❌ Tú pusiste "lista_tareas" dentro, pero el parámetro se llama "tareas"
+    # ✅ Lo corrijo para que use el nombre correcto
     with open(ARCHIVO, "w") as archivo:
-        json.dump(tareas, archivo, indent=4)  # <-- CORREGIDO: tareas en lugar de lista_tareas
+        json.dump(tareas, archivo, indent=4)  # Uso "tareas" en vez de "lista_tareas"
 
-def agregar_tarea(tareas):  # <-- AHORA RECIBE LA LISTA como parámetro
+def agregar_tarea(lista_tareas):  # ❌ Tú no pusiste el parámetro aquí, pero lo llamabas en main
     nueva = input("📝 Escribe la nueva tarea: ")
-    tareas.append(nueva)      # <-- usamos el parámetro
-    guardar_tareas(tareas)    # <-- guardamos
+    lista_tareas.append(nueva)
+    guardar_tareas(lista_tareas)  # Guarda la lista actualizada
     print("✅ Tarea agregada exitosamente.")
 
-def ver_tareas(tareas):  # <-- parámetro se llama tareas
-    if not tareas:
+def ver_tareas(lista_tareas):
+    if not lista_tareas:
         print("📭 No hay tareas pendientes.")
     else:
         print("\n📋 Tareas pendientes:")
-        for i, tarea in enumerate(tareas, start=1):
+        for i, tarea in enumerate(lista_tareas, start=1):
             print(f"{i}. {tarea}")
 
 def menu():
-    print("\n--- Menú de opciones ---")
+    print("\n------------ Menú de opciones ------------")
     print("1. Agregar tarea")
     print("2. Ver tareas")
     print("3. Salir")
     return input("Seleccione una opción: ")
 
 def main():
-    tareas = cargar_tareas()  # Cargamos las tareas al iniciar
+    tareas = cargar_tareas()  # Carga las tareas al empezar
     
-    while True:  # <-- Bucle infinito hasta que el usuario elija salir
+    while True:  # ✅ Usé un bucle while en vez de llamar a main() recursivamente
         opcion = menu()
         
         if opcion == "1":
@@ -45,11 +49,10 @@ def main():
         elif opcion == "2":
             ver_tareas(tareas)
         elif opcion == "3":
-            print("👋 Saliendo del programa...")
-            break  # <-- Salimos del bucle, terminando el programa
+            print("👋 Saliendo del programa... ¡Tus tareas están guardadas!")
+            break  # Sale del bucle y termina el programa
         else:
-            print("❌ Opción inválida. Por favor, seleccione 1, 2 o 3.")
-            # No llamamos a main() recursivamente, solo seguimos en el bucle
+            print("❌ Opción inválida. Intenta de nuevo.")
 
 if __name__ == "__main__":
     main()
